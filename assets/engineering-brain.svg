@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+<title id="title">Self-Improving Engineering Agent</title>
+<desc id="desc">Animated neural network representing learning, memory, evaluation and safe engineering improvement.</desc>
+<defs>
+  <radialGradient id="bg"><stop stop-color="#17122b"/><stop offset="1" stop-color="#05060b"/></radialGradient>
+  <linearGradient id="flow" x1="0" x2="1"><stop stop-color="#8b5cf6"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="soft"><feGaussianBlur stdDeviation="18"/></filter>
+  <style>
+    .node{fill:#0b1020;stroke:#8b5cf6;stroke-width:2}
+    .line{stroke:url(#flow);stroke-width:2;opacity:.35}
+    .pulse{fill:#67e8f9;filter:url(#glow)}
+    .label{fill:#dbeafe;font:600 18px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:1px}
+    .sub{fill:#94a3b8;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+  </style>
+</defs>
+<rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+<circle cx="600" cy="260" r="165" fill="#7c3aed" opacity=".09" filter="url(#soft)"/>
+<g stroke-linecap="round">
+  <path class="line" d="M110 150L330 210M110 370L330 310M330 210L510 260M330 310L510 260M690 260L870 190M690 260L870 330M870 190L1090 150M870 330L1090 370"/>
+  <path class="line" d="M330 210L330 310M870 190L870 330"/>
+  <circle class="pulse" r="5"><animateMotion dur="2.8s" repeatCount="indefinite" path="M110 150L330 210L510 260L690 260L870 190L1090 150"/></circle>
+  <circle class="pulse" r="4"><animateMotion dur="3.4s" begin=".8s" repeatCount="indefinite" path="M110 370L330 310L510 260L690 260L870 330L1090 370"/></circle>
+</g>
+<g>
+  <circle class="node" cx="110" cy="150" r="25"/><circle class="node" cx="110" cy="370" r="25"/>
+  <circle class="node" cx="330" cy="210" r="25"/><circle class="node" cx="330" cy="310" r="25"/>
+  <circle cx="600" cy="260" r="80" fill="#0b1020" stroke="url(#flow)" stroke-width="3" filter="url(#glow)"/>
+  <text x="600" y="253" text-anchor="middle" fill="#fff" font-size="42" font-family="ui-monospace,monospace" font-weight="700">AI</text>
+  <text x="600" y="282" text-anchor="middle" fill="#67e8f9" font-size="13" font-family="ui-monospace,monospace">LEARN • IMPROVE</text>
+  <circle class="node" cx="870" cy="190" r="25"/><circle class="node" cx="870" cy="330" r="25"/>
+  <circle class="node" cx="1090" cy="150" r="25"/><circle class="node" cx="1090" cy="370" r="25"/>
+</g>
+<g class="label">
+  <text x="110" y="112" text-anchor="middle">SESSIONS</text><text x="110" y="418" text-anchor="middle">SIGNALS</text>
+  <text x="330" y="170" text-anchor="middle">MEMORY</text><text x="330" y="352" text-anchor="middle">PATTERNS</text>
+  <text x="870" y="150" text-anchor="middle">EVALUATE</text><text x="870" y="382" text-anchor="middle">PROPOSE</text>
+  <text x="1090" y="112" text-anchor="middle">APPROVE</text><text x="1090" y="418" text-anchor="middle">AUDIT</text>
+</g>
+<text class="sub" x="600" y="485" text-anchor="middle">GIT-NATIVE • HUMAN-GATED • SECURITY-FIRST • MODEL-AGNOSTIC</text>
+</svg>
