@@ -1,0 +1,20 @@
+{
+  "project": "payments-api",
+  "sessions": [
+    {
+      "actor": "developer",
+      "event": "review",
+      "text": "The generated REST endpoint only tests 200 OK. Add negative-path coverage for validation failures and downstream errors (4xx and 5xx)."
+    },
+    {
+      "actor": "claude",
+      "event": "fix",
+      "text": "Updated controller tests to cover validation error response and downstream service failure."
+    },
+    {
+      "actor": "developer",
+      "event": "review",
+      "text": "Same issue appeared on another endpoint: the happy path exists but error responses are missing."
+    }
+  ]
+}
