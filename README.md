@@ -8,35 +8,35 @@
 
 **Learn → Remember → Evaluate → Propose → Approve → Improve → Audit**
 
-[![Status](https://img.shields.io/badge/status-Phase%201%20Foundation-7c3aed?style=for-the-badge)](https://github.com/saurabhjaju2418/self-improving-engineering-agent)
+[![Status](https://img.shields.io/badge/status-Phase%202-7c3aed?style=for-the-badge)](https://github.com/saurabhjaju2418/self-improving-engineering-agent)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-ready-cc785c?style=for-the-badge)](https://docs.anthropic.com/en/docs/claude-code)
 [![Git Native](https://img.shields.io/badge/Git-native-181717?style=for-the-badge&logo=git&logoColor=white)](https://git-scm.com/)
-[![Security First](https://img.shields.io/badge/security-human%20gated-0b6e4f?style=for-the-badge)](#-safety-model)
+[![Local First](https://img.shields.io/badge/data-local--first-0b6e4f?style=for-the-badge)](#-privacy-and-data-security)
 
 </div>
 
 ## What is this?
 
-An open engineering-agent framework inspired by self-improving agent workflows, but designed to keep **the developer in control**.
+An open engineering-agent framework for turning useful signals from Claude Code sessions and engineering work into durable, reviewable knowledge while keeping the developer in control.
 
-It turns useful signals from Claude Code sessions and engineering work into durable, reviewable knowledge. The agent can propose improvements to its own engineering memory and rules, while Git, policy gates, and human approval determine what becomes permanent.
+The project is **local-first by design**: your sessions, source code, memory, proposals, audit records and provider credentials stay on your machine unless you explicitly configure an external integration. The public GitHub repository contains only the framework and sanitized examples — never a user's engineering data.
 
 ```text
 Claude Code / VS Code
         │
         ▼
-   Session Signals
+   Local Session Data
         │
         ▼
  ┌──────────────────┐
- │  Learning Engine │
+ │  Local Learning  │
  │  • patterns      │
  │  • mistakes      │
  │  • decisions     │
  │  • preferences   │
  └────────┬─────────┘
           ▼
-   Engineering Memory
+   Local Engineering Memory
           │
           ▼
  Improvement Proposal
@@ -47,43 +47,171 @@ Claude Code / VS Code
      │    │    │
      └────┼────┘
           ▼
-     Git / Audit Log
+   Local Audit / Optional Git
 ```
+
+## 🔒 Privacy and data security
+
+**This is a core product requirement, not an optional feature.**
+
+When another developer clones this repository, their private engineering data must remain local by default.
+
+### Data that stays local
+
+- Claude Code session transcripts and artifacts
+- source code and local repositories
+- engineering memory
+- learning proposals and approval decisions
+- audit logs
+- local configuration
+- API keys and provider credentials
+- generated embeddings/vector indexes, if enabled
+
+### What this repository must never collect by default
+
+- source code
+- session transcripts
+- prompts containing proprietary information
+- customer/employee data
+- credentials, tokens or secrets
+- local filesystem paths from another user's machine
+- telemetry or analytics
+
+There is **no mandatory hosted backend** and no required telemetry endpoint in the core engine.
+
+### External AI providers
+
+An LLM provider is optional. If a user enables one, the user explicitly controls that integration and should review its data-retention and privacy terms. The core pipeline must sanitize/redact sensitive content before any optional external model call.
+
+**Never put session data, `.env` files, tokens, API keys, credentials, proprietary source code or generated memory into the public repository.**
+
+### Git safety
+
+Local learning data is ignored by default. Only framework files and intentionally sanitized examples should be committed.
+
+The repository should treat these as private by default:
+
+```text
+sessions/
+learning/pending/
+learning/approved/
+learning/rejected/
+learning/applied/
+memory/private/
+.local/
+.env
+.env.*
+*.secret
+*.token
+*.key
+```
+
+Git history matters too: removing a secret from the latest commit does not remove it from previous commits. Rotate any credential that was ever committed. citeturn0search0
+
+## 🚀 Quick start
+
+### 1. Clone the framework
+
+```bash
+git clone https://github.com/saurabhjaju2418/self-improving-engineering-agent.git
+cd self-improving-engineering-agent
+```
+
+### 2. Create an isolated Python environment
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Windows PowerShell:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Run the safe local demo
+
+```bash
+python -m src.learning_engine demo/real-world-java-api-maintenance/session.json
+```
+
+This uses sanitized demo data only. No network call is required.
+
+### 5. Connect Claude Code
+
+Copy or use the commands under `.claude/commands/` in the project where you work. Start with:
+
+```text
+/learn
+/status
+```
+
+Do not point the tool at your entire home directory. Start with one repository and only the session/project artifacts you intentionally want analyzed.
+
+### 6. Review before applying learning
+
+```text
+/review-learning
+```
+
+Only after inspecting a proposal should you use:
+
+```text
+/apply-learning
+```
+
+### 7. Run tests
+
+```bash
+pytest -q
+```
+
+## 🧪 Real-world demo
+
+The included scenario models a Spring Boot REST API maintenance task:
+
+1. An endpoint is implemented.
+2. The developer identifies missing negative-path tests.
+3. A similar correction happens again.
+4. The engine detects the recurring signal.
+5. It creates a structured learning proposal.
+6. The policy layer evaluates the risk.
+7. The developer approves the reusable rule.
+8. Future engineering sessions can use the learned testing convention.
+
+See `demo/real-world-java-api-maintenance/` and `docs/BEGINNER_GUIDE.md`.
 
 ## ✨ Core principles
 
 | Principle | Design |
 |---|---|
-| **Git-native** | Knowledge and changes remain reviewable in Git |
+| **Local-first** | Private engineering data stays on the user's machine by default |
+| **Git-native** | Framework changes remain reviewable in Git |
 | **Human-gated** | Important improvements require explicit approval |
-| **Local-first** | Start without sending an entire codebase to a hosted service |
 | **Policy-driven** | Auto, review, and blocked changes are explicit |
-| **Auditable** | Every durable learning event can be traced |
+| **Auditable** | Durable learning events are traceable |
 | **Security-first** | Secrets, permissions, production changes and security weakening are never autonomous |
-| **Model-agnostic** | The learning architecture should not depend on one model vendor |
+| **Model-agnostic** | The learning architecture is not tied to one model vendor |
+| **No mandatory telemetry** | Core functionality does not require sending usage data to us |
 
 ## 🚦 Safety model
 
 ### 🟢 Auto-apply
 
-Low-risk knowledge maintenance:
-
-- prompt wording improvements
-- duplicate-memory cleanup
-- documentation improvements
-- reusable test-generation hints
-- low-risk pattern normalization
+Low-risk knowledge maintenance such as duplicate-memory cleanup and documentation improvements.
 
 ### 🟡 Human approval
 
-Engineering policy or behavior changes:
-
-- coding standards
-- architecture conventions
-- CI/CD rules
-- dependency recommendations
-- GitLab/GitHub workflow rules
-- security recommendations
+Coding standards, architecture conventions, CI/CD rules, dependency recommendations, integration rules and security recommendations.
 
 ### 🔴 Blocked
 
@@ -98,28 +226,33 @@ Never autonomous:
 - weakening security controls
 - arbitrary production-code self-modification
 
-## 🗂️ Planned architecture
+## 🗂️ Architecture
 
 ```text
 .claude/                 Claude Code commands + skills
+src/                     Learning and policy engine
 memory/                  Durable engineering knowledge
 learning/                Proposed / approved / rejected changes
 policies/                Auto / review / blocked rules
-scripts/                 Analysis and learning utilities
-sessions/                Sanitized session-derived artifacts
+scripts/                 Local utilities
+sessions/                Local, ignored session-derived artifacts
 .github/                 CI, security and project automation
+docs/                    Beginner and architecture guides
+demo/                    Sanitized reproducible examples
 ```
 
 ## 🧠 Learning loop
 
-1. **Observe** — collect useful engineering signals.
-2. **Extract** — identify patterns, decisions, mistakes and successful approaches.
-3. **Evaluate** — score confidence, novelty, risk and recurrence.
-4. **Propose** — generate a small, explainable improvement.
-5. **Gate** — classify it as auto-apply, review, or blocked.
-6. **Apply** — write only approved changes.
-7. **Audit** — record what changed, why, and which evidence supported it.
-8. **Repeat** — use future sessions to validate or invalidate the learned rule.
+1. **Observe** — collect useful engineering signals locally.
+2. **Sanitize** — remove secrets and unnecessary sensitive content.
+3. **Extract** — identify patterns, decisions, mistakes and successful approaches.
+4. **Evaluate** — score confidence, novelty, recurrence and risk.
+5. **Detect contradictions** — identify conflicts with existing memory or policies.
+6. **Propose** — generate a small, explainable improvement.
+7. **Gate** — classify it as auto-apply, review, or blocked.
+8. **Apply** — write only permitted changes.
+9. **Audit** — record what changed and which evidence supported it.
+10. **Repeat** — future sessions validate or invalidate the learned rule.
 
 ## 🛠️ Roadmap
 
@@ -127,22 +260,23 @@ sessions/                Sanitized session-derived artifacts
 
 - [x] Repository
 - [x] Animated project identity
-- [ ] Claude Code command structure
-- [ ] Memory schema
-- [ ] Learning proposal schema
-- [ ] Safety policies
-- [ ] Local session analyzer
-- [ ] Approval workflow
-- [ ] Tests
+- [x] Claude Code command structure
+- [x] Memory/proposal schemas
+- [x] Safety policies
+- [x] Local session analyzer
+- [x] Tests
+- [x] Beginner demo
 
 ### Phase 2 — Self-improvement engine
 
-- recurring-pattern detection
-- contradiction detection
-- confidence scoring
-- proposal generation
-- approval/apply workflow
-- immutable-ish audit trail through Git
+- [x] Recurring-pattern detection foundation
+- [x] Policy evaluation foundation
+- [ ] contradiction detection
+- [ ] confidence calibration
+- [ ] proposal generation adapter
+- [ ] approval/apply workflow persistence
+- [ ] audit trail hardening
+- [ ] session ingestion adapters
 
 ### Phase 3 — Engineering integrations
 
@@ -156,29 +290,22 @@ sessions/                Sanitized session-derived artifacts
 
 ### Phase 4 — Engineering Brain UI
 
-A lightweight dashboard for:
+A lightweight local dashboard for learned patterns, pending improvements, confidence scores, decision history, safety events and learning velocity.
 
-- learned patterns
-- pending improvements
-- confidence scores
-- decision history
-- safety events
-- learning velocity
-
-### Phase 5 — Dream / scheduled learning
+### Phase 5 — Scheduled learning
 
 ```text
-Daily sessions
-     ↓
-Nightly analysis
-     ↓
+Local daily sessions
+       ↓
+Local scheduled analysis
+       ↓
 Lessons + proposals
-     ↓
-Policy evaluation
-     ↓
+       ↓
+Local policy evaluation
+       ↓
 Safe auto-apply / human approval
-     ↓
-Morning engineering brief
+       ↓
+Local engineering brief
 ```
 
 ## 🔐 Security philosophy
@@ -187,13 +314,15 @@ Morning engineering brief
 
 The policy layer is deliberately outside the learning loop. A learned instruction cannot grant itself permission to access secrets, deploy production code, modify security controls, or bypass human approval.
 
-## 🤝 Project goal
+## 🤝 Contributing
 
-Build a practical, open, inspectable alternative to opaque self-improving agent systems — optimized first for software engineering workflows and eventually extensible to other agentic systems.
+Contributions are welcome, but contributors must use synthetic or sanitized examples. Never submit real customer data, proprietary source code, credentials, private session transcripts or other sensitive information.
+
+See `SECURITY.md` and `CONTRIBUTING.md`.
 
 ## 📄 License
 
-MIT — planned for the first stable release.
+MIT.
 
 ---
 
