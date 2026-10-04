@@ -1,3 +1,4 @@
+# Python
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -6,13 +7,41 @@ venv/
 dist/
 build/
 *.egg-info/
+
+# Environment and credentials
 .env
 .env.*
 !.env.example
+*.secret
+*.token
+*.key
+*.pem
+
+# Local/private learning data
+sessions/*
+learning/pending/*
+learning/approved/*
+learning/rejected/*
+learning/applied/*
+memory/private/*
+.local/
+.local-data/
+
+# Local databases / vector indexes
+*.db
+*.sqlite
+*.sqlite3
+*.faiss
+*.index
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs and generated local reports
+*.log
+reports/local/
 coverage.xml
 htmlcov/
-.DS_Store
-learning/approved/*.json
-learning/applied/*.json
-learning/rejected/*.json
-sessions/raw/
