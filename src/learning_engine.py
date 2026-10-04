@@ -1,47 +1,39 @@
 #!/usr/bin/env python3
-"""Deterministic Phase-1 learning engine.
-
-Consumes a JSON session export and emits a validated learning proposal.
-No LLM or network access is required, making the demo safe and reproducible.
-"""
+"""Deterministic, schema-validating learning proposal engine."""
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
 from typing import Any
 
-ROOT = Path(__file__).resolve().parents[1]
-SCHEMA = ROOT / "learning" / "proposal.schema.json"
+from .policy_engine import enforce
+from .proposal import require_valid
 
 PATTERNS = [
     {
         "id": "negative-path-api-tests",
         "title": "Add negative-path tests for REST endpoints",
-        "category": "testing",
+        "category": "low-risk-test-generation-hint",
         "keywords": ["missing negative", "4xx", "5xx", "error response", "negative-path"],
         "confidence": 0.94,
         "risk": "low",
-        "action": "review",
         "rule": "REST endpoint tests should cover expected 4xx and 5xx responses, not only successful responses.",
     },
     {
         "id": "jackson-over-jaxb",
         "title": "Prefer Jackson annotations for generated models",
-        "category": "java",
+        "category": "coding-standard",
         "keywords": ["jaxb", "jackson"],
         "confidence": 0.96,
         "risk": "low",
-        "action": "review",
         "rule": "Generated Java models should use Jackson annotations unless a project requirement explicitly requires JAXB.",
     },
 ]
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    with path.open(encoding="utf-8") as fh:
-        return json.load(fh)
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def flatten(value: Any) -> str:
@@ -54,17 +46,27 @@ def flatten(value: Any) -> str:
 
 def detect(text: str) -> list[dict[str, Any]]:
     lowered = text.lower()
-    matches = []
+    results = []
     for pattern in PATTERNS:
         hits = sum(1 for keyword in pattern["keywords"] if keyword in lowered)
-        if hits:
-            proposal = {k: v for k, v in pattern.items() if k not in {"keywords"}}
-            proposal["evidence"] = [
-                f"Matched {hits} recurring signal(s) for {pattern['id']}."
-            ]
-            proposal["status"] = "pending_approval"
-            matches.append(proposal)
-    return matches
+        if not hits:
+            continue
+        proposal = {
+            "id": pattern["id"],
+            "title": pattern["title"],
+            "category": pattern["category"],
+            "evidence": [f"Matched {hits} recurring signal(s) for {pattern['id']}.", "Observed in sanitized engineering session input."],
+            "confidence": pattern["confidence"],
+            "novelty": 0.5,
+            "risk": pattern["risk"],
+            "gate": "review",
+            "status": "pending",
+            "target": "engineering-memory",
+            "proposed_change": pattern["rule"],
+        }
+        require_valid(proposal)
+        results.append(enforce(proposal))
+    return results
 
 
 def main() -> int:
@@ -74,13 +76,7 @@ def main() -> int:
     session_path = Path(sys.argv[1])
     session = load_json(session_path)
     proposals = detect(flatten(session))
-    output = {
-        "engine_version": "0.1.0",
-        "source": str(session_path),
-        "proposal_count": len(proposals),
-        "proposals": proposals,
-    }
-    print(json.dumps(output, indent=2))
+    print(json.dumps({"engine_version": "0.2.0", "source": str(session_path), "proposal_count": len(proposals), "proposals": proposals}, indent=2))
     return 0
 
 
