@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Engineering Learning Proposal",
+  "type": "object",
+  "required": ["id", "title", "category", "evidence", "confidence", "risk", "gate", "status"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+    "title": {"type": "string", "minLength": 1},
+    "category": {"type": "string"},
+    "evidence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "novelty": {"type": "number", "minimum": 0, "maximum": 1},
+    "risk": {"enum": ["low", "medium", "high", "critical"]},
+    "gate": {"enum": ["auto", "review", "blocked"]},
+    "status": {"enum": ["pending", "approved", "rejected", "request-changes", "applied", "blocked"]},
+    "target": {"type": "string"},
+    "proposed_change": {"type": "string"},
+    "created_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}
