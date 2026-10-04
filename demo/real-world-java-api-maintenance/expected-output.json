@@ -1,0 +1,13 @@
+{
+  "proposal_count": 1,
+  "proposals": [
+    {
+      "id": "negative-path-api-tests",
+      "category": "low-risk-test-generation-hint",
+      "gate": "auto",
+      "status": "pending",
+      "risk": "low",
+      "confidence": 0.94
+    }
+  ]
+}
