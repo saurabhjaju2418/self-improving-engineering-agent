@@ -1,0 +1,36 @@
+version: 1
+
+# The learning engine may classify knowledge changes, but policy authority
+# remains outside the learning loop.
+
+auto:
+  - prompt-improvement
+  - duplicate-memory-cleanup
+  - documentation-improvement
+  - low-risk-test-generation-hint
+  - memory-normalization
+
+review:
+  - coding-standard
+  - architecture-convention
+  - ci-cd-rule
+  - dependency-recommendation
+  - github-workflow-rule
+  - gitlab-workflow-rule
+  - security-recommendation
+
+blocked:
+  - credentials
+  - tokens
+  - secrets
+  - permission-change
+  - access-control-change
+  - production-deployment
+  - branch-protection-change
+  - security-bypass
+  - destructive-operation
+  - security-weakening
+  - arbitrary-production-code-self-modification
+
+# Unknown categories default to review, never auto.
+default_gate: review
